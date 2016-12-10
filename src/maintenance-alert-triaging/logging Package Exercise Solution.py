@@ -4,6 +4,7 @@
 import datetime
 import logging
 
+
 from nose.tools import (assert_equal,
                         assert_in,
                         assert_is_not_none,
@@ -33,27 +34,42 @@ def get_logger():
     global _logger
 
     if _logger is None:
+        #_logger = logging.getLogger()
         _logger = logging.getLogger('exercise')
         _logger.setLevel(logging.DEBUG)
 
-        format_ = '%(asctime)s %(levelname)s: %(message)s'
-        formatter = logging.Formatter(format_)
+        handler = logging.StreamHandler()
+        handler.setLevel(logging.DEBUG)
 
-        stream_handler = logging.StreamHandler()
-        stream_handler.setLevel(logging.DEBUG)
+        _logger.addHandler(handler)
 
-        file_handler = logging.FileHandler('exercise.log')
+        file_handler = logging.FileHandler(filename='log_file.txt')
         file_handler.setLevel(logging.ERROR)
+
+        formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
         file_handler.setFormatter(formatter)
 
-        _logger.addHandler(stream_handler)
         _logger.addHandler(file_handler)
 
     return _logger
 
 
-_logger = get_logger()
-
+#logger = get_logger()
+# logger = logging.getLogger('exercise')
+# logger.setLevel(logging.DEBUG)
+#
+# handler = logging.StreamHandler()
+# handler.setLevel(logging.DEBUG)
+#
+# logger.addHandler(handler)
+#
+# file_handler = logging.FileHandler(filename='log_file.txt')
+# file_handler.setLevel(logging.ERROR)
+#
+# formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
+# file_handler.setFormatter(formatter)
+#
+# logger.addHandler(file_handler)
 
 class TestLogger(object):
 
@@ -122,4 +138,3 @@ class TestLogger(object):
 
         assert_in(str(datetime.date.today()), log_message)
         assert_not_in('exercise', log_message)
-
